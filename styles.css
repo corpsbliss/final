@@ -1,0 +1,138 @@
+/* General Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #74ebd5, #acb6e5); /* Gradient background */
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Form Container Styling */
+.form-container {
+    display: flex;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+}
+
+.form-left, .form-right {
+    padding: 30px;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+.form-left {
+    background-color: #f7f9fb;
+    border-right: 2px solid #eee;
+}
+
+.form-right {
+    background-color: #fff;
+}
+
+/* Heading styling */
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Input and Textarea Styling */
+input[type="file"], textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #e1e5eb;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="file"]:hover, textarea:focus {
+    border-color: #74ebd5;
+    outline: none;
+}
+
+/* Button Styling */
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #74ebd5;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4ca1af;
+}
+
+/* Progress Bar Container */
+.progress-container {
+    width: 100%;
+    background-color: #e1e5eb;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: block; /* Now visible */
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #74ebd5;
+    width: 0%; /* Will be updated via JavaScript */
+    transition: width 0.4s ease;
+}
+
+/* Upload message styling */
+.upload-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    display: none;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    .form-left, .form-right {
+        width: 100%;
+    }
+}

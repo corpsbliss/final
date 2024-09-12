@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        // Handle the file upload or notes upload
+        function uploadFile(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const fileInput = document.querySelector('input[name="file"]');
+            const file = fileInput.files[0];
+            const notes = document.querySelector('textarea[name="notes"]').value;
+            
+            // Validation: Ensure only one of file or notes is provided
+            if (file && notes) {
+                alert("Please choose either a file or enter text, not both.");
+                return;
+            }
+
+            if (!file && !notes) {
+                alert("Please choose a file or enter text.");
+                return;
+            }
+
+            const formData = new FormData();
+
+            if (file) {
+                formData.append('file', file);
+            }
+            
+            if (notes) {
+                formData.append('notes', notes);
+            }
+
+            const xhr = new XMLHttpRequest();
+            const progressBar = document.getElementById('progress-bar');
+            const uploadMessage = document.getElementById('upload-message');
+
+            // Show progress bar when upload starts
+            progressBar.style.display = 'block';
+            progressBar.style.width = '0%';
+            uploadMessage.innerHTML = '';
+
+            // Track progress
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                }
+            });
+
+            // When upload is complete
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        uploadMessage.innerHTML = response.message;
+                        uploadMessage.style.display = 'block';
+                        uploadMessage.style.opacity = '1';
+                        
+                        // Hide message after 5 seconds
+                        setTimeout(() => {
+                            uploadMessage.style.opacity = '0';
+                        }, 5000);
+                    } else {
+                        uploadMessage.innerHTML = response.message;
+                        uploadMessage.style.display = 'block';
+                        uploadMessage.style.opacity = '1';
+                        
+                        // Hide message after 5 seconds
+                        setTimeout(() => {
+                            uploadMessage.style.opacity = '0';
+                        }, 5000);
+                    }
+                }
+            };
+
+            // Send the form data
+            xhr.open('POST', '/', true);
+            xhr.send(formData);
+        }
+
+        // Function to download the content of the right textarea as a file
+        function downloadAnalysisReport() {
+            const content = document.querySelector('textarea[name="analysis"]').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analysis_report.txt';  // Name of the downloaded file
+            a.click();
+
+            window.URL.revokeObjectURL(url);  // Clean up the URL object
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="upload-message" class="upload-message"></div>
+
+        <div class="form-container">
+            <!-- Left Side Form -->
+            <div class="form-left">
+                <h2>Upload File or Enter Text</h2>
+                <form id="upload-form" method="POST" enctype="multipart/form-data" onsubmit="uploadFile(event)">
+                    <div id="progress-container" class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                    <input type="file" name="file" accept=".txt,.log"><br>
+                    <textarea name="notes" placeholder="Add notes here..."></textarea><br>
+                    <button type="submit">Upload File</button>
+                </form>
+            </div>
+
+            <!-- Right Side Form -->
+            <div class="form-right">
+                <h2>View Analysis</h2>
+                <form method="POST">
+                    <textarea name="analysis" readonly>{{ processed_file_content }}</textarea><br>
+                    <button type="submit" name="view_analysis" value="true">View Analysis</button>
+                    <button type="button" onclick="downloadAnalysisReport()">Download Analysis Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
